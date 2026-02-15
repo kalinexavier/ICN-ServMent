@@ -1,6 +1,7 @@
 import streamlit as st
 import plotly.graph_objects as go
 import pandas as pd
+from streamlit_gsheets import GSheetsConnection
 from io import BytesIO
 
 # 1. CONFIGURAÇÃO DA PÁGINA
@@ -43,7 +44,7 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# 2. BARRA LATERAL (TEXTOS ORIGINAIS RESTAURADOS)
+# 2. BARRA LATERAL 
 with st.sidebar:
     st.markdown("### 🏛️ Sobre o PTT")
     st.markdown("""
@@ -85,7 +86,7 @@ with c_id2:
 
 st.write("---")
 
-# 4. DICIONÁRIOS COMPLETOS (SEM PONTUAÇÃO FINAL)
+# 4. DICIONÁRIOS 
 lei_grupos = {
     "Grupo I - Promoção da saúde mental": [
         "implementação de programas de promoção da saúde mental no ambiente de trabalho",
@@ -180,14 +181,42 @@ with g3:
 
 st.markdown(f"<div class='res-box-clean'><p style='color: #000; font-weight: bold; margin-bottom: 2px; font-size: 0.85rem;'>Índice Geral de Conformidade</p><h1 style='font-size: 2.5rem !important; color: #EB5E28; margin:0;'>{icn:.2f}</h1></div>", unsafe_allow_html=True)
 
-# 6. EXPORTAÇÃO
+6. EXPORTAÇÃO E SALVAMENTO 
 output = BytesIO()
 with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
     pd.DataFrame(respostas_excel).to_excel(writer, index=False)
 
-st.download_button("📥 Gerar Relatório Profissional (Excel)", data=output.getvalue(), file_name=f"ICN_{nome_inst}.xlsx", type="primary", use_container_width=True)
+# Tenta conectar e salvar
+try:
+    conn = st.connection("gsheets", type=GSheetsConnection)
+    
+    if st.download_button("📥 Gerar Relatório Profissional (Excel)", 
+                          data=output.getvalue(), 
+                          file_name=f"ICN_{nome_inst}.xlsx", 
+                          type="primary", 
+                          use_container_width=True):
+        
+        # Dados que serão salvos na planilha
+        nova_linha = pd.DataFrame([{
+            "Data": pd.Timestamp.now().strftime("%d/%m/%Y %H:%M"),
+            "Instituicao": nome_inst,
+            "Contato": contato_resp,
+            "ICL": round(icl, 2),
+            "ICP": round(icp, 2),
+            "ICN": round(icn, 2)
+        }])
+        
+        # Nome da aba tem que ser igual ao da planilha (ex: Página1)
+        existentes = conn.read(worksheet="Página1") 
+        atualizado = pd.concat([existentes, nova_linha], ignore_index=True)
+        conn.update(worksheet="Página1", data=atualizado)
+        
+        st.success("✅ Diagnóstico registrado com sucesso!")
+except Exception as e:
+    # Se der erro, ele vai te mostrar um texto vermelho explicando o porquê
+    st.error(f"Erro técnico: {e}")
 
-# 7. RODAPÉ ORIGINAL RESTAURADO
+# 7. RODAPÉ 
 st.write("<br>", unsafe_allow_html=True)
 st.markdown(f"""
     <div style='text-align: center; color: #444; font-size: 0.82rem; line-height: 1.6;'>
@@ -197,3 +226,4 @@ st.markdown(f"""
         Mestrado Profissional em Gestão Pública | UFPE</p>
     </div>
 """, unsafe_allow_html=True)
+
