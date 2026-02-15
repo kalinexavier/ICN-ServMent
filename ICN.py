@@ -219,7 +219,7 @@ if st.download_button("📥 Gerar Relatório Profissional (Excel)",
         # 4. SALVAMOS o bloco inteiro atualizado
         conn.update(spreadsheet=url_planilha, worksheet="Página1", data=df_final)
         
-        st.success("✅ Diagnóstico registrado com sucesso! Verifique sua planilha.")
+        st.success("✅ Diagnóstico registrado com sucesso!")
 
     except Exception as e:
         st.error(f"Erro ao salvar: {e}")
@@ -234,6 +234,7 @@ st.markdown(f"""
         Mestrado Profissional em Gestão Pública | UFPE</p>
     </div>
 """, unsafe_allow_html=True)
+
 
 
 
