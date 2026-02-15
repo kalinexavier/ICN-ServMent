@@ -22,9 +22,12 @@ st.markdown("""
     }
     .stApp { background-color: #FFFFFF; }
     
-    /* SOBE O TEXTO NA ABA LATERAL */
+    /* SOBE O TEXTO NA ABA LATERAL PARA O TOPO ABSOLUTO */
     [data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
         padding-top: 0rem !important;
+    }
+    [data-testid="stSidebar"] .stMarkdown {
+        margin-top: -2.5rem !important;
     }
     
     [data-testid="stSidebar"] { 
@@ -40,22 +43,28 @@ st.markdown("""
     }
     [data-testid="stSidebar"] hr { border: 0.5px solid #ff9e7d; margin: 10px 0; }
     
-    /* CARDS MAIS FINOS */
+    /* CARDS FINOS */
     .card-lei, .card-portaria { 
         padding: 5px 10px; border-radius: 6px; margin-bottom: 4px; font-size: 0.82rem; color: #000000 !important;
     }
     .card-lei { background-color: #FFF5EE; border-left: 3px solid #FFB347; }
-    .card-portaria { background-color: #FFFFF0; border-left: 3px solid #FFD700; }
+    .card-portaria { background-color: #FFFFF0; border-left: 5px solid #FFD700; }
     
+    /* QUADRO DO ICN AMPLIADO E CENTRALIZADO */
     .res-box-clean { 
-        background-color: #FFFFFF; padding: 10px; border-radius: 15px; border: 2px solid #EB5E28; 
-        text-align: center; max-width: 280px; margin: 15px auto; 
+        background-color: #FFFFFF; 
+        padding: 25px; 
+        border-radius: 20px; 
+        border: 3px solid #EB5E28; 
+        text-align: center; 
+        max-width: 450px; 
+        margin: 40px auto; 
     }
     button[kind="primary"] { background-color: #EB5E28 !important; border: none !important; border-radius: 8px !important; }
     </style>
     """, unsafe_allow_html=True)
 
-# 2. BARRA LATERAL (TEXTOS COMPLETOS)
+# 2. BARRA LATERAL 
 with st.sidebar:
     st.markdown("### 🏛️ Sobre o PTT")
     st.markdown("""
@@ -95,7 +104,7 @@ with c_id2:
 
 st.write("---")
 
-# 4. DICIONÁRIOS (TEXTOS COMPLETOS RESTAURADOS)
+# 4. DICIONÁRIOS COMPLETOS
 lei_grupos = {
     "Grupo I - Promoção da saúde mental": [
         "implementação de programas de promoção da saúde mental no ambiente de trabalho",
@@ -173,33 +182,70 @@ with col_p:
     st.markdown("## 📋 Portaria 1.261/2010")
     icp = sum([render_item(f"P{i+18}", txt, "card-portaria") for i, txt in enumerate(port_txt)]) / 18
 
-# 6. RESULTADOS E GRÁFICOS
+# 6. RESULTADOS E GRÁFICOS 
 st.write("---")
 icn = (icl + icp) / 2
 g1, g2, g3 = st.columns(3)
 layout_c = {'x':0.5, 'xanchor': 'center', 'font': {'color': 'black'}}
 
+# Espessuras padronizadas
+w_estreita = 0.4
+w_espessa = 0.7
+
 with g1:
-    f1 = go.Figure(go.Bar(x=['G-I', 'G-II', 'G-III', 'ICL'], y=scores_l + [icl], marker_color='#FFB347', text=[f"{v:.2f}" for v in scores_l + [icl]], textposition='auto'))
-    f1.update_layout(title={'text': "Conformidade à Lei 14.831", **layout_c}, yaxis=dict(range=[0, 1.1]), height=280)
+    f1 = go.Figure(go.Bar(
+        x=['G-I', 'G-II', 'G-III', 'ICL'], 
+        y=scores_l + [icl], 
+        marker_color=['#FFB347', '#FFB347', '#FFB347', '#EB5E28'],
+        width=[w_estreita, w_estreita, w_estreita, w_espessa],
+        text=[f"{v:.2f}" for v in scores_l + [icl]], 
+        textposition='auto'
+    ))
+    f1.update_layout(title={'text': "Conformidade à Lei 14.831", **layout_c}, yaxis=dict(range=[0, 1.1]), height=300)
     st.plotly_chart(f1, use_container_width=True)
 
 with g2:
-    f2 = go.Figure(go.Bar(x=['Média ICP'], y=[icp], marker_color='#FFD700', text=[f"{icp:.2f}"], textposition='auto'))
-    f2.update_layout(title={'text': "Conformidade à Portaria 1.261", **layout_c}, yaxis=dict(range=[0, 1.1]), height=280)
+    f2 = go.Figure(go.Bar(
+        x=['Média ICP'], 
+        y=[icp], 
+        marker_color='#FFD700',
+        width=[w_espessa],
+        text=[f"{icp:.2f}"], 
+        textposition='auto'
+    ))
+    f2.update_layout(title={'text': "Conformidade à Portaria 1.261", **layout_c}, yaxis=dict(range=[0, 1.1]), height=300)
     st.plotly_chart(f2, use_container_width=True)
 
 with g3:
-    f3 = go.Figure(go.Bar(x=['Geral (ICN)'], y=[icn], marker_color='#EB5E28', text=[f"{icn:.2f}"], textposition='auto'))
-    f3.update_layout(title={'text': "Conformidade Geral (ICN)", **layout_c}, yaxis=dict(range=[0, 1.1]), height=280)
+    f3 = go.Figure(go.Bar(
+        x=['Geral (ICN)'], 
+        y=[icn], 
+        marker_color='#EB5E28',
+        width=[w_espessa],
+        text=[f"{icn:.2f}"], 
+        textposition='auto'
+    ))
+    f3.update_layout(title={'text': "Conformidade Geral (ICN)", **layout_c}, yaxis=dict(range=[0, 1.1]), height=300)
     st.plotly_chart(f3, use_container_width=True)
 
-st.markdown(f"<div class='res-box-clean'><p style='color: #000; font-weight: bold; margin-bottom: 2px; font-size: 0.85rem;'>Índice Geral de Conformidade</p><h1 style='font-size: 2.5rem !important; color: #EB5E28; margin:0;'>{icn:.2f}</h1></div>", unsafe_allow_html=True)
+# QUADRO ICN 
+st.markdown(f"""
+    <div class='res-box-clean'>
+        <p style='color: #000; font-weight: bold; margin-bottom: 10px; font-size: 1.1rem;'>
+            Índice Geral de Conformidade - ICN
+        </p>
+        <h1 style='font-size: 4rem !important; color: #EB5E28; margin:0;'>
+            {icn:.2f}
+        </h1>
+    </div>
+""", unsafe_allow_html=True)
 
-# 7. EXPORTAÇÃO E SALVAMENTO (TTL=0 E CONCAT MANTIDOS)
+# 7. EXPORTAÇÃO E SALVAMENTO (TTL=0)
 output = BytesIO()
 with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
     pd.DataFrame(respostas_excel).to_excel(writer, index=False)
+
+st.write("<br>", unsafe_allow_html=True) # Espaçamento extra antes do botão
 
 if st.download_button("📥 Gerar Relatório Profissional (Excel)", 
                       data=output.getvalue(), 
@@ -223,8 +269,8 @@ if st.download_button("📥 Gerar Relatório Profissional (Excel)",
     except Exception as e:
         st.error(f"Erro ao salvar: {e}")
 
-# 8. RODAPÉ ORIGINAL
-st.write("<br>", unsafe_allow_html=True)
+# 8. RODAPÉ 
+st.write("<br><br>", unsafe_allow_html=True)
 st.markdown(f"""
     <div style='text-align: center; color: #444; font-size: 0.82rem; line-height: 1.6;'>
         <p><b>Sistema idealizado por Kaline Mirele Silva Xavier sob Orientação do docente Denilson Bezerra Marques.</b><br>
