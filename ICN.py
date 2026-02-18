@@ -5,7 +5,7 @@ from streamlit_gsheets import GSheetsConnection
 from io import BytesIO
 
 # 1. CONFIGURAÇÃO DA PÁGINA
-st.set_page_config(page_title="ICN - Kaline Xavier", layout="wide", page_icon="📊")
+st.set_page_config(page_title="ICN-ServMent", layout="wide", page_icon="📊")
 
 # CONEXÃO COM GOOGLE SHEETS
 conn = st.connection("gsheets", type=GSheetsConnection)
@@ -66,13 +66,14 @@ with st.sidebar:
     st.markdown("### 🏛️ Sobre o PTT")
     st.markdown("""
         <div style="color: white; text-align: justify; font-size: 0.82rem; margin-bottom: 10px;">
-            Este produto técnico-tecnológico é resultante da dissertação de mestrado intitulada 
-            <b>"A POLÍTICA DE SAÚDE MENTAL DA UNIVERSIDADE FEDERAL DE PERNAMBUCO: Entre a Normativa e a Realidade Laboral à Luz da Psicodinâmica do Trabalho"</b>, 
-            do Mestrado Profissional em Gestão Pública para o Desenvolvimento Do Nordeste - CCSA da UFPE.
+            Este índice de conformidade é um produto técnico-tecnológico resultante da dissertação de mestrado intitulada 
+            "A POLÍTICA DE SAÚDE MENTAL DA UNIVERSIDADE FEDERAL DE PERNAMBUCO: Entre a Normativa e a Realidade Laboral à Luz da Psicodinâmica do Trabalho" (2026), 
+            do Mestrado Profissional em Gestão Pública para o Desenvolvimento do Nordeste - CCSA da UFPE.
             <br><br>
             Ele funciona como uma calculadora para mensurar a aderência institucional às normativas federais de saúde mental no trabalho: 
             <b>Lei Nº 14.831/2024</b> (Certificado Empresa Promotora da Saúde Mental) e à 
             <b>Portaria SRH/MP Nº 1.261/2010</b> (Princípios, Diretrizes e Ações em Saúde Mental para os órgãos e entidades do Sistema de Pessoal Civil - SIPEC da Administração Pública Federal).
+            Para entender mais sobre o índice, consulte a dissertação publicada. 
         </div>
     """, unsafe_allow_html=True)
     st.markdown("<hr>", unsafe_allow_html=True)
@@ -80,9 +81,11 @@ with st.sidebar:
     st.markdown("""
         <div style="color: white; font-size: 0.82rem;">
             1. Clique na caixa de seleção para os itens que forem atendidos pela instituição.<br><br>
-            2. Descreva a <b>Evidência</b>, caso o indicador seja atendido. Caso não seja, escreva o <b>Plano de Ação</b>.<br><br>
+            2. Descreva a <b>Evidência</b>, caso o indicador seja atendido. Caso não seja, escreva o <b>Plano de Ação</b>.<br><br> 
             3. Depois do preenchimento, clique em gerar Relatório para obter o resumo.<br><br>
-            4. Quanto mais próximo o indicador estiver de <b>1,00</b>, mais próximo do total atendimento da normativa.
+            4. O ICN-ServMent é a média de conformidade da Lei e da Portaria.
+            5. Quanto mais próximo o indicador estiver de <b>1,00</b>, mais próximo do total atendimento da normativa.
+            6. Gere o Relatório ao final para salvar as informações preenchidas.
         </div>
         <div style="background-color: white; padding: 10px; border-radius: 8px; text-align: left; margin-top: 15px;">
             <span style="color: #EB5E28 !important; font-weight: bold; font-size: 0.72rem; line-height: 1.2;">
@@ -92,7 +95,7 @@ with st.sidebar:
     """, unsafe_allow_html=True)
 
 # 3. PÁGINA PRINCIPAL
-st.markdown("<h1>Índice de Conformidade às Normativas Federais de Saúde Mental Aplicadas ao Serviço Público</h1>", unsafe_allow_html=True)
+st.markdown("<h1>Índice de Conformidade às Normativas Federais de Saúde Mental Aplicadas ao Serviço Público - ICN-ServMent</h1>", unsafe_allow_html=True)
 c_id1, c_id2 = st.columns(2)
 with c_id1:
     nome_inst = st.text_input("🏢 Nome da Instituição/Unidade:", placeholder="Ex: UFPE - Progepe")
@@ -289,6 +292,7 @@ st.markdown(f"""
         Mestrado Profissional em Gestão Pública | UFPE</p>
     </div>
 """, unsafe_allow_html=True)
+
 
 
 
