@@ -92,7 +92,7 @@ with st.sidebar:
     """, unsafe_allow_html=True)
 
 # 3. PÁGINA PRINCIPAL
-st.markdown("<h1>Índice de Conformidade às Normativas Federais de Saúde Mental</h1>", unsafe_allow_html=True)
+st.markdown("<h1>Índice de Conformidade às Normativas Federais de Saúde Mental Aplicadas ao Serviço Público</h1>", unsafe_allow_html=True)
 c_id1, c_id2 = st.columns(2)
 with c_id1:
     nome_inst = st.text_input("🏢 Nome da Instituição/Unidade:", placeholder="Ex: UFPE - Progepe")
@@ -289,6 +289,7 @@ st.markdown(f"""
         Mestrado Profissional em Gestão Pública | UFPE</p>
     </div>
 """, unsafe_allow_html=True)
+
 
 
 
